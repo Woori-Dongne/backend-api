@@ -1,4 +1,4 @@
-import { Users } from 'src/modules/users/entities/user.entity';
+import { Users } from '../../../modules/users/entities/user.entity';
 import { Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { ChattingRoom } from './chattingRoom.entity';
 
