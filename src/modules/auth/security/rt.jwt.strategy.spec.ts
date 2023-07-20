@@ -20,8 +20,9 @@ describe('RTJwtStrategy', () => {
     userName: 'TestUser',
     phoneNumber: '010-1234-5678',
     role: 'user',
-    created_at: new Date(),
+    createdAt: new Date(),
     updatedAt: new Date(),
+    regionId: null,
     region: null,
     user: null,
     friend: null,
@@ -30,6 +31,7 @@ describe('RTJwtStrategy', () => {
     post: null,
     chattingRoom: null,
     ChattingUsers: null,
+    imageUrl: null,
   };
 
   const payloadMock: Payload = {
