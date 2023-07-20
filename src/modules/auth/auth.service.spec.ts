@@ -13,7 +13,7 @@ describe('AuthService', () => {
   beforeEach(async () => {
     // 모의 객체 초기화
     mockUsersRepository = {
-      findOneUserByEmail: jest.fn(),
+      getUserByEmail: jest.fn(),
       createUser: jest.fn(),
     };
 
@@ -78,7 +78,7 @@ describe('AuthService', () => {
 
       // findOneUserByEmail 모의
       jest
-        .spyOn(mockUsersRepository, 'findOneUserByEmail')
+        .spyOn(mockUsersRepository, 'getUserByEmail')
         .mockResolvedValue(users); // 사용자가 존재하는 것으로 모의
       // jwtService.sign 모의
       jest
@@ -90,7 +90,7 @@ describe('AuthService', () => {
 
       expect(result.accessToken).toBe('mockedToken');
       expect(result.refreshToken).toBe('mockedToken');
-      expect(mockUsersRepository.findOneUserByEmail).toHaveBeenCalledWith(
+      expect(mockUsersRepository.getUserByEmail).toHaveBeenCalledWith(
         'test@example.com',
       );
       expect(mockJwtService.sign).toHaveBeenCalledWith(
