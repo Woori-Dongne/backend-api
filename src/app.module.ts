@@ -1,7 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -14,6 +11,7 @@ import { PostsModule } from './modules/posts/posts.module';
 import { Posts } from './modules/posts/entities/posts.entity';
 import { ChattingRoom } from './modules/posts/entities/chattingRoom.entity';
 import { ChattingUsers } from './modules/posts/entities/chattingUsers.entity';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -46,7 +44,7 @@ import { ChattingUsers } from './modules/posts/entities/chattingUsers.entity';
     UsersModule,
     PostsModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}
