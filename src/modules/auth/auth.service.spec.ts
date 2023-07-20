@@ -4,6 +4,7 @@ import { AuthService } from './auth.service';
 import { UsersRepository } from '../users/user.repository';
 import { JwtService } from '@nestjs/jwt';
 import axios from 'axios';
+import { Users } from '../users/entities/user.entity';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -52,14 +53,14 @@ describe('AuthService', () => {
           email: 'test@example.com',
         },
       };
-      const users = {
+      const users: Users = {
         id: 1,
         email: 'test@example.com',
         kakaoId: '1',
         userName: null,
         phoneNumber: null,
         role: null,
-        created_at: null,
+        createdAt: null,
         updatedAt: null,
         user: null,
         friend: null,
@@ -69,6 +70,8 @@ describe('AuthService', () => {
         chattingRoom: null,
         ChattingUsers: null,
         region: null,
+        regionId: null,
+        imageUrl: null,
       };
       const mockedAccessToken = 'mockedToken';
       const mockedRefreshToken = 'mockedToken';
@@ -76,11 +79,10 @@ describe('AuthService', () => {
       // axios.get 모의
       jest.spyOn(axios, 'get').mockResolvedValue({ data: user });
 
-      // findOneUserByEmail 모의
       jest
         .spyOn(mockUsersRepository, 'getUserByEmail')
-        .mockResolvedValue(users); // 사용자가 존재하는 것으로 모의
-      // jwtService.sign 모의
+        .mockResolvedValue(users);
+
       jest
         .spyOn(mockJwtService, 'sign')
         .mockReturnValueOnce(mockedAccessToken)

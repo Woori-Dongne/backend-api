@@ -2,7 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Users } from './entities/user.entity';
 import { Repository } from 'typeorm';
-import { CreateUserDto } from './dto/user.dto';
+import { CreateUserDto, UpdateUserInfoDTO } from './dto/user.dto';
+
+import { plainToClass } from 'class-transformer';
 
 @Injectable()
 export class UsersRepository {
@@ -10,6 +12,7 @@ export class UsersRepository {
     @InjectRepository(Users)
     private readonly userRepository: Repository<Users>,
   ) {}
+
   async getUserByEmail(email: string): Promise<Users> {
     return await this.userRepository.findOne({ where: { email } });
   }
@@ -17,6 +20,7 @@ export class UsersRepository {
   async createUser(createUserDto: CreateUserDto): Promise<Users> {
     return await this.userRepository.save(createUserDto);
   }
+
   async findUserById(userId: number): Promise<Users | undefined> {
     return await this.userRepository.findOne({
       where: {
@@ -24,5 +28,15 @@ export class UsersRepository {
       },
       relations: ['region'],
     });
+  }
+
+  async updateUserInfo(
+    userId: number,
+    updateUserInfoDTO: UpdateUserInfoDTO,
+  ): Promise<Users> {
+    const user = new Users();
+    Object.assign(user, { id: userId }, updateUserInfoDTO);
+
+    return await this.userRepository.save(user);
   }
 }

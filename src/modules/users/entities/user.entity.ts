@@ -11,10 +11,9 @@ import {
 import { Friends } from './friends.entity';
 import { Reports } from './report.entity';
 import { Regions } from './region.entity';
-
+import { Posts } from '../../../modules/posts/entities/posts.entity';
 import { ChattingRoom } from '../../../modules/posts/entities/chattingRoom.entity';
 import { ChattingUsers } from '../../../modules/posts/entities/chattingUsers.entity';
-import { Posts } from '../../../modules/posts/entities/posts.entity';
 
 @Entity('users')
 @Unique(['email'])
@@ -44,7 +43,7 @@ export class Users {
   imageUrl: string;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  created_at: Date;
+  createdAt: Date;
 
   @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
   updatedAt: Date;
