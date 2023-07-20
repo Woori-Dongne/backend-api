@@ -11,10 +11,9 @@ import {
 import { Friends } from './friends.entity';
 import { Reports } from './report.entity';
 import { Regions } from './region.entity';
-
-import { ChattingRoom } from '../../../modules/posts/entities/chattingRoom.entity';
-import { ChattingUsers } from '../../../modules/posts/entities/chattingUsers.entity';
-import { Posts } from '../../../modules/posts/entities/posts.entity';
+import { Posts } from 'src/modules/posts/entities/posts.entity';
+import { ChattingRoom } from 'src/modules/posts/entities/chattingRoom.entity';
+import { ChattingUsers } from 'src/modules/posts/entities/chattingUsers.entity';
 
 @Entity('users')
 @Unique(['email'])
@@ -28,13 +27,13 @@ export class Users {
   @Column({ name: 'kakao_id', type: 'bigint' })
   kakaoId: string;
 
-  @Column({ name: 'username', type: 'varchar', length: 100, default: null })
+  @Column({ name: 'username', type: 'varchar', length: 100 })
   userName: string;
 
-  @Column({ name: 'phoneNumber', type: 'varchar', length: 100, default: null })
+  @Column({ name: 'phoneNumber', type: 'varchar', length: 100 })
   phoneNumber: string;
 
-  @Column({ type: 'varchar', length: 100, default: null })
+  @Column({ type: 'varchar', length: 100 })
   role: string;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
@@ -64,7 +63,7 @@ export class Users {
   @OneToMany(() => ChattingUsers, (ChattingUsers) => ChattingUsers.user)
   ChattingUsers: ChattingUsers;
 
-  @ManyToOne(() => Regions, (Regions) => Regions.user, { nullable: true })
+  @ManyToOne(() => Regions, (Regions) => Regions.user)
   @JoinColumn({ name: 'region_id' })
   region: Regions;
 }
