@@ -10,8 +10,22 @@ export class PostRepository {
     private readonly postRepository: Repository<Posts>,
   ) {}
 
+  async getUserpost(
+    userId: number,
+    offset: number,
+    limit: number,
+  ): Promise<Posts[] | null> {
+    return await this.postRepository.find({
+      where: { user: { id: userId } },
+      take: limit,
+      skip: offset,
+    });
+  }
+
   async getPostList(
     regionId: number,
+    offset: number,
+    limit: number,
     category?: number,
     sortBy?: string,
   ): Promise<Posts[]> {
@@ -20,6 +34,8 @@ export class PostRepository {
     const options: FindManyOptions<Posts> = {
       where: { region: { id: regionId } },
       order: {},
+      take: limit,
+      skip: offset,
     };
 
     if (category) {

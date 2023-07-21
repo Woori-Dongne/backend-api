@@ -1,7 +1,6 @@
 import { Module, forwardRef } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { UsersModule } from 'src/modules/users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
@@ -9,6 +8,9 @@ import { JwtStrategy } from './security/jwt.strategy';
 import { RTJwtStrategy } from './security/rt.jwt.strategy';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Users } from '../users/entities/user.entity';
+import { UsersRepository } from '../users/user.repository';
+import { UsersModule } from '../users/users.module';
+
 @Module({
   imports: [
     TypeOrmModule.forFeature([Users]),
