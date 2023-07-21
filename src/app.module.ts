@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { UsersModule } from './modules/users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { dirname } from 'path';
 import { Users } from './modules/users/entities/user.entity';
 import { Friends } from './modules/users/entities/friends.entity';
 import { Reports } from './modules/users/entities/report.entity';
@@ -36,7 +35,7 @@ import { SnakeCaseNamingStrategy } from './snake-case-naming-strategy';
           ChattingUsers,
         ],
         // entities: [__dirname + '/**/entities/*.entity.ts'], ---------이런식으로경로지정하고 싶은데 잘 안되요...
-        // logging: true,
+        logging: true,
         namingStrategy: new SnakeCaseNamingStrategy(),
         synchronize: true,
       }),
