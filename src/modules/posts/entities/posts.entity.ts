@@ -1,3 +1,4 @@
+import { Regions } from '../../../modules/users/entities/region.entity';
 import { Users } from '../../../modules/users/entities/user.entity';
 import {
   Column,
@@ -46,4 +47,11 @@ export class Posts {
   @ManyToOne(() => Users, (user) => user.post)
   @JoinColumn({ name: 'user_id' })
   user: Users;
+
+  @Column()
+  regionId: number;
+
+  @ManyToOne(() => Regions, (Regions) => Regions.post)
+  @JoinColumn({ name: 'region_id' })
+  region: Regions;
 }
