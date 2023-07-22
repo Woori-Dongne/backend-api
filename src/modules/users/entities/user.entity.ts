@@ -11,10 +11,9 @@ import {
 import { Friends } from './friends.entity';
 import { Reports } from './report.entity';
 import { Regions } from './region.entity';
-
+import { Posts } from '../../../modules/posts/entities/posts.entity';
 import { ChattingRoom } from '../../../modules/posts/entities/chattingRoom.entity';
 import { ChattingUsers } from '../../../modules/posts/entities/chattingUsers.entity';
-import { Posts } from '../../../modules/posts/entities/posts.entity';
 
 @Entity('users')
 @Unique(['email'])
@@ -50,10 +49,10 @@ export class Users {
   updatedAt: Date;
 
   @OneToMany(() => Friends, (Friends) => Friends.user)
-  user: Friends;
+  user: Friends[];
 
   @OneToMany(() => Friends, (Friends) => Friends.friend)
-  friend: Friends;
+  friend: Friends[];
 
   @OneToMany(() => Reports, (Reports) => Reports.user)
   report: Reports;
