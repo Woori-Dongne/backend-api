@@ -17,4 +17,12 @@ export class UsersRepository {
   async createUser(createUserDto: CreateUserDto): Promise<Users> {
     return await this.userRepository.save(createUserDto);
   }
+  async findUserById(userId: number): Promise<Users | undefined> {
+    return await this.userRepository.findOne({
+      where: {
+        id: userId,
+      },
+      relations: ['region'],
+    });
+  }
 }
