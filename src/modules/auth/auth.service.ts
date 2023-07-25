@@ -4,6 +4,7 @@ import { UsersRepository } from '../users/user.repository';
 import { LoginRequest } from './dto/login.request';
 import { CreateUserDto } from 'src/modules/users/dto/user.dto';
 import { JwtService } from '@nestjs/jwt';
+import { Users } from '../users/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -47,5 +48,9 @@ export class AuthService {
 
   async generateRefreshToken(id: number): Promise<string> {
     return this.jwtService.sign({ userId: id }, { expiresIn: '7d' });
+  }
+
+  async findUserById(userId: number): Promise<Users> {
+    return this.usersRepository.findUserById(userId);
   }
 }
