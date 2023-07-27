@@ -23,11 +23,11 @@ export class Reports {
   content: string;
 
   @ManyToOne(() => Users, (user) => user.report)
-  @JoinColumn({ name: 'userId' })
+  @JoinColumn({ name: 'user_id' })
   user: Users;
 
   @ManyToOne(() => Users, (user) => user.attacker)
-  @JoinColumn({ name: 'friendId' })
+  @JoinColumn({ name: 'friend_id' })
   friend: Users;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })

@@ -6,6 +6,8 @@ import { CreateUserDto, UpdateUserInfoDTO } from './dto/user.dto';
 import { plainToClass } from 'class-transformer';
 import { Friends } from './entities/friends.entity';
 import { Regions } from './entities/region.entity';
+import { Reports } from './entities/report.entity';
+import { CreateReportDto } from './dto/report.dto';
 
 @Injectable()
 export class UsersRepository {
@@ -16,6 +18,8 @@ export class UsersRepository {
     private readonly friendRepository: Repository<Friends>,
     @InjectRepository(Regions)
     private readonly regionRepository: Repository<Regions>,
+    @InjectRepository(Reports)
+    private readonly reportRepository: Repository<Reports>,
   ) {}
 
   async getUserByEmail(email: string): Promise<Users> {
@@ -68,5 +72,14 @@ export class UsersRepository {
     if (!region) region = await this.regionRepository.save({ name });
 
     return region.id;
+  }
+
+  async createReport(
+    userId: number,
+    createReportDto: CreateReportDto,
+  ): Promise<Reports> {
+    const report = new Reports();
+    Object.assign(report, { userId }, createReportDto);
+    return await this.reportRepository.save(report);
   }
 }

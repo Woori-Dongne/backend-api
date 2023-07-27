@@ -7,6 +7,7 @@ import { ChattingRoom } from '../posts/entities/chattingRoom.entity';
 import { ChattingUsers } from '../posts/entities/chattingUsers.entity';
 import { Posts } from '../posts/entities/posts.entity';
 import { Friends } from './entities/friends.entity';
+import { CreateReportDto } from './dto/report.dto';
 import { Reports } from './entities/report.entity';
 import { Profile } from './type/profile.type';
 
@@ -40,5 +41,12 @@ export class UsersService {
     };
 
     return profile;
+  }
+
+  async createReport(
+    userId: number,
+    createReportDto: CreateReportDto,
+  ): Promise<Reports> {
+    return await this.usersRepository.createReport(userId, createReportDto);
   }
 }
