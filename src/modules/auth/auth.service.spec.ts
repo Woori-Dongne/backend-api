@@ -8,11 +8,10 @@ import { Users } from '../users/entities/user.entity';
 
 describe('AuthService', () => {
   let service: AuthService;
-  let mockUsersRepository: Partial<UsersRepository>; // UsersRepository의 모의 객체
-  let mockJwtService: Partial<JwtService>; // JwtService의 모의 객체
+  let mockUsersRepository: Partial<UsersRepository>;
+  let mockJwtService: Partial<JwtService>;
 
   beforeEach(async () => {
-    // 모의 객체 초기화
     mockUsersRepository = {
       getUserByEmail: jest.fn(),
       createUser: jest.fn(),
@@ -26,11 +25,11 @@ describe('AuthService', () => {
         AuthService,
         {
           provide: UsersRepository,
-          useValue: mockUsersRepository, // UsersRepository의 모의 객체 주입
+          useValue: mockUsersRepository,
         },
         {
           provide: JwtService,
-          useValue: mockJwtService, // JwtService의 모의 객체 주입
+          useValue: mockJwtService,
         },
       ],
     }).compile();
@@ -44,7 +43,6 @@ describe('AuthService', () => {
   });
 
   describe('kakaoLogin', () => {
-    // describe 블록 안에 kakaoLogin 테스트 케이스를 정의
     it('should return access and refresh tokens', async () => {
       const kakaoToken = { AccessToken: 'mockedAccessToken' };
       const user = {
@@ -76,7 +74,6 @@ describe('AuthService', () => {
       const mockedAccessToken = 'mockedToken';
       const mockedRefreshToken = 'mockedToken';
 
-      // axios.get 모의
       jest.spyOn(axios, 'get').mockResolvedValue({ data: user });
 
       jest

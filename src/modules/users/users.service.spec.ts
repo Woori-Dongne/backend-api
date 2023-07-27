@@ -1,12 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
-import { RequestUser } from '../auth/type/req.interface';
+import { UsersRepository } from './user.repository';
 import { UpdateUserInfoDTO } from './dto/user.dto';
 import { Users } from './entities/user.entity';
-import { Regions } from './entities/region.entity';
-import { UsersRepository } from './user.repository';
 import { Profile } from './type/profile.type';
+import { CreateReportDto } from './dto/report.dto';
+import { Reports } from './entities/report.entity';
 
 const mockUser: Users = {
   id: 1,
@@ -31,9 +30,24 @@ const mockUser: Users = {
 
 const mockUserProfile: Profile = {
   id: 1,
-  userName: 'TestUser',
-  imageUrl: 'test-image.jpg',
+  userName: 'John Doe',
+  imageUrl: 'http://example.com/image.jpg',
   follow: false,
+};
+
+const mockCreateReportDto: CreateReportDto = {
+  friendId: 2,
+  content: 'This is a test report.',
+};
+
+const mockReport: Reports = {
+  friendId: 2,
+  content: 'This is a test report.',
+  userId: 1,
+  id: 2,
+  created_at: null,
+  user: null,
+  friend: null,
 };
 
 class UsersRepositoryMock {
@@ -51,17 +65,22 @@ class UsersRepositoryMock {
   async checkRegion(regionId: number) {
     return 1;
   }
+
+  async isfollowing(friendId: number, userId: number) {
+    return false;
+  }
+
+  async createReport(userId: number, createReportDto: CreateReportDto) {
+    return mockReport;
+  }
 }
 
 describe('UsersService', () => {
   let usersService: UsersService;
   let usersRepository: UsersRepository;
-  let controller: UsersController;
-  let req: RequestUser;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [UsersController],
       providers: [
         UsersService,
         { provide: UsersRepository, useClass: UsersRepositoryMock },
@@ -70,22 +89,15 @@ describe('UsersService', () => {
 
     usersService = module.get<UsersService>(UsersService);
     usersRepository = module.get<UsersRepository>(UsersRepository);
-    controller = module.get<UsersController>(UsersController);
-
-    req = {
-      user: {
-        id: 1,
-        region: { id: 1 },
-      },
-    } as RequestUser;
   });
 
   it('should be defined', () => {
-    expect(controller).toBeDefined();
+    expect(usersService).toBeDefined();
   });
 
   describe('updateUserInfo', () => {
-    it('should save user information', async () => {
+    it('should save userinfo', async () => {
+      const userId = 1;
       const updateUserInfoDTO: UpdateUserInfoDTO = {
         userName: 'John Doe',
         phoneNumber: '123-456-7890',
@@ -94,33 +106,53 @@ describe('UsersService', () => {
         imageUrl: 'http://example.com/image.jpg',
       };
 
-      jest.spyOn(usersService, 'updateUserInfo').mockResolvedValue(mockUser);
-      jest.spyOn(usersRepository, 'checkRegion').mockResolvedValue(1); // 수정된 부분
+      jest.spyOn(usersRepository, 'checkRegion').mockResolvedValue(1);
 
-      const result = await controller.updateUserInfo(req, updateUserInfoDTO);
+      const result = await usersService.updateUserInfo(
+        userId,
+        updateUserInfoDTO,
+      );
 
       expect(result).toMatchObject({
         ...updateUserInfoDTO,
-        id: req.user.id,
+        id: userId,
       });
-      expect(usersService.updateUserInfo).toHaveBeenCalledWith(
-        req.user.id,
-        updateUserInfoDTO,
-      );
     });
   });
 
   describe('findUserById', () => {
-    it('should return a user profile', async () => {
+    it('should return user profile', async () => {
       const friendId = 2;
+      const userId = 1;
 
-      jest
-        .spyOn(usersService, 'findUserById')
-        .mockResolvedValue(mockUserProfile);
+      jest.spyOn(usersRepository, 'isfollowing').mockResolvedValue(false);
 
-      const result = await controller.findUserById(req, friendId);
+      const result = await usersService.findUserById(friendId, userId);
 
       expect(result).toEqual(mockUserProfile);
+      expect(usersRepository.isfollowing).toHaveBeenCalledWith(
+        friendId,
+        userId,
+      );
+    });
+  });
+
+  describe('createReport', () => {
+    it('should create a report', async () => {
+      const userId = 1;
+
+      jest.spyOn(usersRepository, 'createReport').mockResolvedValue(mockReport);
+
+      const result = await usersService.createReport(
+        userId,
+        mockCreateReportDto,
+      );
+
+      expect(result).toEqual(mockReport);
+      expect(usersRepository.createReport).toHaveBeenCalledWith(
+        userId,
+        mockCreateReportDto,
+      );
     });
   });
 });

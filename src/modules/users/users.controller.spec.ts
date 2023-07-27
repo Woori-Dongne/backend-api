@@ -4,6 +4,7 @@ import { UsersService } from './users.service';
 import { Profile } from './type/profile.type';
 import { RequestUser } from '../auth/type/req.interface';
 import { UpdateUserInfoDTO } from './dto/user.dto';
+import { CreateReportDto } from './dto/report.dto';
 
 const mockUser: Profile = {
   id: 1,
@@ -12,16 +13,18 @@ const mockUser: Profile = {
   follow: false,
 };
 
-class UsersServiceMock {
-  async findUserById(friendId: number, userId: number) {
-    return mockUser;
-  }
-  async updateUserInfo(userId: number, updateUserInfoDTO: UpdateUserInfoDTO) {
-    return {
-      ...updateUserInfoDTO,
-      id: userId,
-    };
-  }
+const mockReport: any = {
+  friendId: 2,
+  content: 'This is a test report.',
+  userId: 1,
+  id: 2,
+  created_at: null,
+};
+
+class MockUsersService {
+  findUserById = jest.fn().mockResolvedValue(mockUser);
+  updateUserInfo = jest.fn().mockResolvedValue(mockUser);
+  createReport = jest.fn().mockResolvedValue(mockReport);
 }
 
 describe('UsersController', () => {
@@ -35,7 +38,7 @@ describe('UsersController', () => {
       providers: [
         {
           provide: UsersService,
-          useClass: UsersServiceMock,
+          useClass: MockUsersService,
         },
       ],
     }).compile();
@@ -59,11 +62,13 @@ describe('UsersController', () => {
     it('should return a user profile', async () => {
       const friendId = 2;
 
-      jest.spyOn(userService, 'findUserById').mockResolvedValue(mockUser);
-
       const result = await controller.findUserById(req, friendId);
 
       expect(result).toEqual(mockUser);
+      expect(userService.findUserById).toHaveBeenCalledWith(
+        friendId,
+        req.user.id,
+      );
     });
   });
 
@@ -88,11 +93,33 @@ describe('UsersController', () => {
 
       const result = await controller.updateUserInfo(req, updateUserInfoDTO);
 
-      expect(userService.updateUserInfo).toHaveBeenCalledWith(
-        req.user.id,
-        updateUserInfoDTO,
-      );
+      expect(result).toMatchObject(expectedResult);
+    });
+  });
+
+  describe('createReport', () => {
+    it('should call UsersService createReport and return the result', async () => {
+      const createReportDto: CreateReportDto = {
+        friendId: 2,
+        content: 'This is a test report.',
+      };
+      const userId = 1;
+
+      const expectedResult = {
+        friendId: 2,
+        content: 'This is a test report.',
+        userId: 1,
+        id: 2,
+        created_at: null,
+      };
+
+      const result = await controller.createReport(req, createReportDto);
+
       expect(result).toEqual(expectedResult);
+      expect(userService.createReport).toHaveBeenCalledWith(
+        userId,
+        createReportDto,
+      );
     });
   });
 });
