@@ -1,5 +1,11 @@
 import { Users } from '../../../modules/users/entities/user.entity';
-import { Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { ChattingRoom } from './chattingRoom.entity';
 
 @Entity('chatting_users')
@@ -7,8 +13,14 @@ export class ChattingUsers {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column()
+  chattingRoomId: number;
+
+  @Column()
+  userId: number;
+
   @ManyToOne(() => ChattingRoom, (ChattingRoom) => ChattingRoom.ChattingUsers)
-  @JoinColumn({ name: 'chattingRoom_id' })
+  @JoinColumn({ name: 'chatting_room_id' })
   chattingRoom: ChattingRoom;
 
   @ManyToOne(() => Users, (user) => user.ChattingUsers)

@@ -22,7 +22,7 @@ export class Posts {
   @Column({ name: 'personnel', type: 'int' })
   personnel: number;
 
-  @Column({ name: 'imageUrl', type: 'varchar', length: 2000, default: null })
+  @Column({ type: 'varchar', length: 2000, default: null })
   imageUrl: string;
 
   @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
@@ -31,14 +31,17 @@ export class Posts {
   @Column({ type: 'int' })
   category: number;
 
+  @Column()
+  userId: number;
+
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  created_at: Date;
+  createdAt: Date;
 
   @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
   updatedAt: Date;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  deleted_at: Date;
+  deletedAt: Date;
 
   @ManyToOne(() => Users, (user) => user.post)
   @JoinColumn({ name: 'user_id' })

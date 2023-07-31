@@ -9,26 +9,25 @@ import {
 import { Users } from './user.entity';
 
 @Entity('reports')
-@Unique(['user_id', 'friend_id'])
 export class Reports {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  user_id: number;
+  userId: number;
 
   @Column()
-  friend_id: number;
+  friendId: number;
 
   @Column({ type: 'varchar', length: 500 })
   content: string;
 
   @ManyToOne(() => Users, (user) => user.report)
-  @JoinColumn({ name: 'user_id' })
+  @JoinColumn({ name: 'userId' })
   user: Users;
 
   @ManyToOne(() => Users, (user) => user.attacker)
-  @JoinColumn({ name: 'friend_id' })
+  @JoinColumn({ name: 'friendId' })
   friend: Users;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })

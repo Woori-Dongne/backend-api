@@ -15,10 +15,13 @@ export class ChattingRoom {
   id: number;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  created_at: Date;
+  createdAt: Date;
 
   @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   deadline: Date;
+
+  @Column()
+  hostId: number;
 
   @OneToMany(() => ChattingUsers, (ChattingUsers) => ChattingUsers.chattingRoom)
   ChattingUsers: ChattingUsers;
