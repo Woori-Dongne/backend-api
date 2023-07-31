@@ -25,17 +25,23 @@ export class Users {
   @Column({ type: 'varchar', length: 100 })
   email: string;
 
-  @Column({ name: 'kakao_id', type: 'bigint' })
+  @Column({ type: 'bigint' })
   kakaoId: string;
 
-  @Column({ name: 'username', type: 'varchar', length: 100, default: null })
+  @Column({ type: 'varchar', length: 100, default: null })
   userName: string;
 
-  @Column({ name: 'phoneNumber', type: 'varchar', length: 100, default: null })
+  @Column({ type: 'varchar', length: 100, default: null })
   phoneNumber: string;
 
   @Column({ type: 'varchar', length: 100, default: null })
   role: string;
+
+  @Column({ default: null })
+  regionId: number;
+
+  @Column({ type: 'varchar', length: 2000, default: null })
+  imageUrl: string;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date;

@@ -12,6 +12,7 @@ import { Posts } from './modules/posts/entities/posts.entity';
 import { ChattingRoom } from './modules/posts/entities/chattingRoom.entity';
 import { ChattingUsers } from './modules/posts/entities/chattingUsers.entity';
 import { AuthModule } from './modules/auth/auth.module';
+import { SnakeCaseNamingStrategy } from './snake-case-naming-strategy';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { AuthModule } from './modules/auth/auth.module';
         ],
         // entities: [__dirname + '/**/entities/*.entity.ts'], ---------이런식으로경로지정하고 싶은데 잘 안되요...
         // logging: true,
+        namingStrategy: new SnakeCaseNamingStrategy(),
         synchronize: true,
       }),
     }),

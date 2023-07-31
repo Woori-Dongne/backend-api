@@ -9,16 +9,16 @@ import {
 import { Users } from './user.entity';
 
 @Entity('friends')
-@Unique(['user_id', 'friend_id'])
+@Unique(['userId', 'friendId'])
 export class Friends {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  user_id: number;
+  userId: number;
 
   @Column()
-  friend_id: number;
+  friendId: number;
 
   @ManyToOne(() => Users, (user) => user.user)
   @JoinColumn({ name: 'user_id' })
