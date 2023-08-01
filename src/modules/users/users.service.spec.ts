@@ -1,83 +1,114 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
-import { UsersRepository } from './user.repository';
+import { Profile } from './type/profile.type';
+import { RequestUser } from '../auth/type/req.interface';
 import { UpdateUserInfoDTO } from './dto/user.dto';
-import { Users } from './entities/user.entity';
-import { Regions } from './entities/region.entity';
-import { ChattingRoom } from '../posts/entities/chattingRoom.entity';
-import { ChattingUsers } from '../posts/entities/chattingUsers.entity';
-import { Posts } from '../posts/entities/posts.entity';
-import { Friends } from './entities/friends.entity';
-import { Reports } from './entities/report.entity';
 
-describe('UsersService', () => {
-  let service: UsersService;
-  let usersRepository: UsersRepository;
+const mockUser: Profile = {
+  id: 1,
+  userName: 'TestUser',
+  imageUrl: 'test-image.jpg',
+  follow: false,
+};
+
+class UsersServiceMock {
+  async findUserById(friendId: number, userId: number) {
+    return mockUser;
+  }
+  async updateUserInfo(userId: number, updateUserInfoDTO: UpdateUserInfoDTO) {
+    return null;
+  }
+}
+
+class UsersRepositoryMock {
+  async findUserById(userId: number) {
+    return mockUser;
+  }
+  async isfollowing(friendId: number, userId: number) {
+    return true;
+  }
+  async updateUserInfo(userId: number, updateUserInfoDTO: UpdateUserInfoDTO) {
+    return {
+      ...updateUserInfoDTO,
+      id: userId,
+    };
+  }
+}
+
+describe('UsersController', () => {
+  let controller: UsersController;
+  let userService: UsersService;
+  let req: RequestUser;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      controllers: [UsersController],
       providers: [
-        UsersService,
         {
-          provide: UsersRepository,
-          useValue: {
-            updateUserInfo: jest.fn(), // Mocking the saveUserInfo method
-          },
+          provide: UsersService,
+          useClass: UsersServiceMock,
         },
       ],
     }).compile();
 
-    service = module.get<UsersService>(UsersService);
-    usersRepository = module.get<UsersRepository>(UsersRepository);
+    userService = module.get<UsersService>(UsersService);
+    controller = module.get<UsersController>(UsersController);
+
+    req = {
+      user: {
+        id: 1,
+        region: { id: 1 },
+      },
+    } as RequestUser;
   });
 
   it('should be defined', () => {
-    expect(service).toBeDefined();
+    expect(controller).toBeDefined();
   });
 
-  describe('saveUserInfo', () => {
-    it('should save user information', async () => {
-      const updateUserInfoDTO: UpdateUserInfoDTO = {
-        userName: 'John Doe',
-        phoneNumber: '123-456-7890',
-        region: 1,
-        role: 'user',
-        imageUrl: 'http://example.com/image.jpg',
-      };
-      const userId = 1;
+  describe('findUserById', () => {
+    it('should return a user profile', async () => {
+      const friendId = 2;
 
-      const savedUser: Users = {
+      jest.spyOn(userService, 'findUserById').mockResolvedValue(mockUser);
+
+      const result = await controller.findUserById(req, friendId);
+
+      expect(result).toEqual(mockUser);
+    });
+  });
+
+  describe('updateUserInfo', () => {
+    it('should call UsersService updateUserInfo and return the result', async () => {
+      const updateUserInfoDTO: UpdateUserInfoDTO = {
+        userName: 'hi',
+        phoneNumber: '011-2234-3113',
+        region: 1,
+        role: 'ch',
+        imageUrl: null,
+      };
+
+      const expectedResult: any = {
+        userName: 'hi',
+        phoneNumber: '011-2234-3113',
+        region: 1,
+        role: 'ch',
+        imageUrl: null,
         id: 1,
-        userName: 'John Doe',
-        phoneNumber: '123-456-7890',
-        region: new Regions(),
-        role: 'user',
-        imageUrl: 'http://example.com/image.jpg',
-        email: '',
-        kakaoId: '',
-        createdAt: null,
-        updatedAt: null,
-        regionId: null,
-        user: null,
-        friend: null,
-        report: new Reports(),
-        attacker: new Reports(),
-        post: new Posts(),
-        chattingRoom: new ChattingRoom(),
-        ChattingUsers: new ChattingUsers(),
       };
 
       jest
-        .spyOn(usersRepository, 'updateUserInfo')
-        .mockImplementation(async () => savedUser);
+        .spyOn(userService, 'updateUserInfo')
+        .mockResolvedValue(expectedResult);
 
-      const result = await service.updateUserInfo(userId, updateUserInfoDTO);
+      const result = await controller.updateUserInfo(req, updateUserInfoDTO);
 
-      expect(result).toEqual(savedUser);
-      expect(usersRepository.updateUserInfo).toHaveBeenCalledWith(
-        1,
+      expect(userService.updateUserInfo).toHaveBeenCalledWith(
+        req.user.id,
         updateUserInfoDTO,
       );
+      expect(result).toEqual(expectedResult);
     });
   });
 });

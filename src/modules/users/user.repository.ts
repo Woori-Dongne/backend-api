@@ -3,14 +3,16 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Users } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDto, UpdateUserInfoDTO } from './dto/user.dto';
-
 import { plainToClass } from 'class-transformer';
+import { Friends } from './entities/friends.entity';
 
 @Injectable()
 export class UsersRepository {
   constructor(
     @InjectRepository(Users)
     private readonly userRepository: Repository<Users>,
+    @InjectRepository(Friends)
+    private readonly friendRepository: Repository<Friends>,
   ) {}
 
   async getUserByEmail(email: string): Promise<Users> {
@@ -38,5 +40,13 @@ export class UsersRepository {
     Object.assign(user, { id: userId }, updateUserInfoDTO);
 
     return await this.userRepository.save(user);
+  }
+
+  async isfollowing(friendId: number, userId: number): Promise<boolean> {
+    const friend = await this.friendRepository.findOne({
+      where: { friendId, userId },
+    });
+
+    return !!friend;
   }
 }
