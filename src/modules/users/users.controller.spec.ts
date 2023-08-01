@@ -72,7 +72,7 @@ describe('UsersController', () => {
       const updateUserInfoDTO: UpdateUserInfoDTO = {
         userName: 'hi',
         phoneNumber: '011-2234-3113',
-        region: 1,
+        region: '',
         role: 'ch',
         imageUrl: null,
       };

@@ -18,7 +18,15 @@ export class UsersService {
     userId: number,
     updateUserInfoDTO: UpdateUserInfoDTO,
   ): Promise<Users> {
-    return this.usersRepository.updateUserInfo(userId, updateUserInfoDTO);
+    const region = await this.usersRepository.checkRegion(
+      updateUserInfoDTO.region,
+    );
+
+    return await this.usersRepository.updateUserInfo(
+      userId,
+      updateUserInfoDTO,
+      region,
+    );
   }
 
   async findUserById(friendId: number, userId: number): Promise<Profile> {

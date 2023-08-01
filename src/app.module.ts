@@ -35,7 +35,7 @@ import { SnakeCaseNamingStrategy } from './snake-case-naming-strategy';
           ChattingUsers,
         ],
         // entities: [__dirname + '/**/entities/*.entity.ts'], ---------이런식으로경로지정하고 싶은데 잘 안되요...
-        logging: true,
+        // logging: true,
         namingStrategy: new SnakeCaseNamingStrategy(),
         synchronize: true,
       }),
