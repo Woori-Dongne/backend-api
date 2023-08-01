@@ -17,8 +17,8 @@ export class UpdateUserInfoDTO {
   @IsString()
   readonly phoneNumber: string;
 
-  @IsNumber()
-  readonly region: number;
+  @IsString()
+  readonly region: string;
 
   @IsString()
   readonly role: string;

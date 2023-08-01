@@ -6,10 +6,11 @@ import { Users } from './entities/user.entity';
 import { UsersRepository } from './user.repository';
 import { AuthModule } from '../auth/auth.module';
 import { Friends } from './entities/friends.entity';
+import { Regions } from './entities/region.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Users, Friends]),
+    TypeOrmModule.forFeature([Users, Friends, Regions]),
     forwardRef(() => AuthModule),
   ],
   controllers: [UsersController],

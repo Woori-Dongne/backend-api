@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { CreateUserDto, UpdateUserInfoDTO } from './dto/user.dto';
 import { plainToClass } from 'class-transformer';
 import { Friends } from './entities/friends.entity';
+import { Regions } from './entities/region.entity';
 
 @Injectable()
 export class UsersRepository {
@@ -13,6 +14,8 @@ export class UsersRepository {
     private readonly userRepository: Repository<Users>,
     @InjectRepository(Friends)
     private readonly friendRepository: Repository<Friends>,
+    @InjectRepository(Regions)
+    private readonly regionRepository: Repository<Regions>,
   ) {}
 
   async getUserByEmail(email: string): Promise<Users> {
@@ -35,9 +38,16 @@ export class UsersRepository {
   async updateUserInfo(
     userId: number,
     updateUserInfoDTO: UpdateUserInfoDTO,
+    region: number,
   ): Promise<Users> {
-    const user = new Users();
-    Object.assign(user, { id: userId }, updateUserInfoDTO);
+    const user: Partial<Users> = {
+      id: userId,
+      userName: updateUserInfoDTO.userName,
+      role: updateUserInfoDTO.role,
+      phoneNumber: updateUserInfoDTO.phoneNumber,
+      imageUrl: updateUserInfoDTO?.imageUrl,
+      regionId: region,
+    };
 
     return await this.userRepository.save(user);
   }
@@ -48,5 +58,15 @@ export class UsersRepository {
     });
 
     return !!friend;
+  }
+
+  async checkRegion(name: string): Promise<number> {
+    let region = await this.regionRepository.findOne({
+      where: { name },
+    });
+
+    if (!region) region = await this.regionRepository.save({ name });
+
+    return region.id;
   }
 }
