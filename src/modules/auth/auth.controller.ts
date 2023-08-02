@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards, Get, Req } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginRequest } from './dto/login.request';
 import { Tokens } from './type/token.type';
@@ -15,7 +15,7 @@ export class AuthController {
   }
 
   @UseGuards(RTAuthGuard)
-  @Get('refresh')
+  @Post('refresh')
   async refreshToken(@Req() req: RequestUser): Promise<Tokens> {
     const [accessToken, refreshToken] = await Promise.all([
       this.authService.generateAccessToken(req.user.id),
