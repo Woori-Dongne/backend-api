@@ -34,7 +34,7 @@ export class Users {
   phoneNumber: string;
 
   @Column({ type: 'varchar', length: 100, default: null })
-  role: string;
+  gender: string;
 
   @Column({ default: null })
   regionId: number;

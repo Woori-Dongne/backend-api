@@ -56,7 +56,7 @@ describe('PostsService', () => {
         kakaoId: '12345',
         userName: 'TestUser',
         phoneNumber: '010-1234-5678',
-        role: 'user',
+        gender: 'F',
         createdAt: new Date(),
         updatedAt: new Date(),
         regionId: null,

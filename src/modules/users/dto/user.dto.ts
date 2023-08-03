@@ -21,7 +21,7 @@ export class UpdateUserInfoDTO {
   readonly region: string;
 
   @IsString()
-  readonly role: string;
+  readonly gender: string;
 
   @IsOptional()
   @IsString()
