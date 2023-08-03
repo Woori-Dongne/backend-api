@@ -8,6 +8,8 @@ import { Friends } from './entities/friends.entity';
 import { Regions } from './entities/region.entity';
 import { Reports } from './entities/report.entity';
 import { CreateReportDto } from './dto/report.dto';
+import { privateDecrypt } from 'crypto';
+import { FriendsDto } from './dto/friends.dto';
 
 @Injectable()
 export class UsersRepository {
@@ -81,5 +83,13 @@ export class UsersRepository {
     const report = new Reports();
     Object.assign(report, { userId }, createReportDto);
     return await this.reportRepository.save(report);
+  }
+
+  async following(friendsDto: FriendsDto): Promise<Friends> {
+    return await this.friendRepository.save(friendsDto);
+  }
+
+  async unfollowing(friendsDto: FriendsDto) {
+    return await this.friendRepository.delete(friendsDto);
   }
 }

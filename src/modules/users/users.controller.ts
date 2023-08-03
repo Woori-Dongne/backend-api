@@ -4,6 +4,7 @@ import {
   Get,
   Patch,
   Param,
+  Delete,
   Req,
   UseGuards,
   Post,
@@ -46,5 +47,32 @@ export class UsersController {
     const userId = req.user.id;
 
     return await this.userService.createReport(userId, createReportDto);
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('/follow/:friendId')
+  async following(
+    @Req() req: RequestUser,
+    @Param('friendId') friendId: number,
+  ) {
+    const userId = req.user.id;
+
+    return await this.userService.following({
+      userId,
+      friendId,
+    });
+  }
+
+  @UseGuards(AuthGuard)
+  @Delete('/follow/:friendId')
+  async unfollowing(
+    @Req() req: RequestUser,
+    @Param('friendId') friendId: number,
+  ) {
+    const userId = req.user.id;
+    return await this.userService.unfollowing({
+      userId,
+      friendId,
+    });
   }
 }

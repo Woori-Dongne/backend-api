@@ -1,18 +1,42 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
-import { Profile } from './type/profile.type';
-import { RequestUser } from '../auth/type/req.interface';
 import { UpdateUserInfoDTO } from './dto/user.dto';
+import { RequestUser } from '../auth/type/req.interface';
 import { CreateReportDto } from './dto/report.dto';
 
-const mockUser: Profile = {
+const mockUser = {
   id: 1,
   userName: 'TestUser',
   imageUrl: 'test-image.jpg',
   follow: false,
 };
 
+class UsersServiceMock {
+  async findUserById(friendId: number, userId: number) {
+    return mockUser;
+  }
+  async updateUserInfo(userId: number, updateUserInfoDTO: UpdateUserInfoDTO) {
+    return {
+      ...updateUserInfoDTO,
+      id: userId,
+    };
+  }
+  async following(data: any) {
+    return {
+      id: 1,
+      user_id: data.userId,
+      friend_id: data.friendId,
+      created_at: undefined,
+    };
+  }
+  async unfollowing(data: any) {
+    return {
+      raw: [],
+      affected: 1,
+    };
+  }
+}
 const mockReport: any = {
   friendId: 2,
   content: 'This is a test report.',
@@ -25,6 +49,16 @@ class MockUsersService {
   findUserById = jest.fn().mockResolvedValue(mockUser);
   updateUserInfo = jest.fn().mockResolvedValue(mockUser);
   createReport = jest.fn().mockResolvedValue(mockReport);
+  following = jest.fn().mockResolvedValue({
+    id: 1,
+    user_id: 1,
+    friend_id: 2,
+    created_at: undefined,
+  });
+  unfollowing = jest.fn().mockResolvedValue({
+    raw: [],
+    affected: 1,
+  });
 }
 
 describe('UsersController', () => {
@@ -120,6 +154,48 @@ describe('UsersController', () => {
         userId,
         createReportDto,
       );
+    });
+  });
+
+  describe('following', () => {
+    it('should call UsersService following and return the result', async () => {
+      const friendId = 2;
+
+      const expectedResult: any = {
+        id: 1,
+        user_id: 1,
+        friend_id: 2,
+        created_at: undefined,
+      };
+      jest.spyOn(userService, 'following').mockResolvedValue(expectedResult);
+
+      const result = await controller.following(req, friendId);
+
+      expect(userService.following).toHaveBeenCalledWith({
+        userId: req.user.id,
+        friendId,
+      });
+      expect(result).toEqual(expectedResult);
+    });
+  });
+
+  describe('unfollowing', () => {
+    it('should call UsersService unfollowing and return the result', async () => {
+      const friendId = 2;
+
+      const expectedResult = {
+        raw: [],
+        affected: 1,
+      };
+      jest.spyOn(userService, 'unfollowing').mockResolvedValue(expectedResult);
+
+      const result = await controller.unfollowing(req, friendId);
+
+      expect(userService.unfollowing).toHaveBeenCalledWith({
+        userId: req.user.id,
+        friendId,
+      });
+      expect(result).toEqual(expectedResult);
     });
   });
 });

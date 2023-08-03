@@ -10,6 +10,7 @@ import { Friends } from './entities/friends.entity';
 import { CreateReportDto } from './dto/report.dto';
 import { Reports } from './entities/report.entity';
 import { Profile } from './type/profile.type';
+import { FriendsDto } from './dto/friends.dto';
 
 @Injectable()
 export class UsersService {
@@ -48,5 +49,13 @@ export class UsersService {
     createReportDto: CreateReportDto,
   ): Promise<Reports> {
     return await this.usersRepository.createReport(userId, createReportDto);
+  }
+
+  async following(friendsDto: FriendsDto) {
+    return await this.usersRepository.following(friendsDto);
+  }
+
+  async unfollowing(friendsDto: FriendsDto) {
+    return await this.usersRepository.unfollowing(friendsDto);
   }
 }
