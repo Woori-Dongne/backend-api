@@ -1,52 +1,46 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
-import { UpdateUserInfoDTO } from './dto/user.dto';
 import { RequestUser } from '../auth/type/req.interface';
+import { UpdateUserInfoDTO } from './dto/user.dto';
+import { Profile } from './type/profile.type';
+import { Friend } from './type/friendList.type';
 import { CreateReportDto } from './dto/report.dto';
+import { Reports } from './entities/report.entity';
 
-const mockUser = {
+const mockFriendList: Friend[] = [
+  { id: 2, userName: '친구 1', imageUrl: 'gooogle.com' },
+  { id: 3, userName: '친구 2', imageUrl: 'gogle.com' },
+];
+
+const mockUserProfile: Profile = {
   id: 1,
-  userName: 'TestUser',
-  imageUrl: 'test-image.jpg',
+  userName: 'John Doe',
+  imageUrl: 'http://example.com/image.jpg',
   follow: false,
 };
 
-class UsersServiceMock {
-  async findUserById(friendId: number, userId: number) {
-    return mockUser;
-  }
-  async updateUserInfo(userId: number, updateUserInfoDTO: UpdateUserInfoDTO) {
-    return {
-      ...updateUserInfoDTO,
-      id: userId,
-    };
-  }
-  async following(data: any) {
-    return {
-      id: 1,
-      user_id: data.userId,
-      friend_id: data.friendId,
-      created_at: undefined,
-    };
-  }
-  async unfollowing(data: any) {
-    return {
-      raw: [],
-      affected: 1,
-    };
-  }
-}
-const mockReport: any = {
-  friendId: 2,
-  content: 'This is a test report.',
+const mockReport: Reports = {
+  id: 1,
   userId: 1,
-  id: 2,
+  friendId: 1,
+  content: '먹튀',
+  user: null,
+  friend: null,
   created_at: null,
 };
 
+const mockUser: UpdateUserInfoDTO = {
+  userName: 'John Doe',
+  phoneNumber: '123-456-7890',
+  region: null,
+  gender: 'F',
+  imageUrl: 'http://example.com/image.jpg',
+};
+
 class MockUsersService {
-  findUserById = jest.fn().mockResolvedValue(mockUser);
+  getFriendList = jest.fn().mockResolvedValue(mockFriendList);
+  findUserById = jest.fn().mockResolvedValue(mockUserProfile);
   updateUserInfo = jest.fn().mockResolvedValue(mockUser);
   createReport = jest.fn().mockResolvedValue(mockReport);
   following = jest.fn().mockResolvedValue({
@@ -69,12 +63,7 @@ describe('UsersController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UsersController],
-      providers: [
-        {
-          provide: UsersService,
-          useClass: MockUsersService,
-        },
-      ],
+      providers: [{ provide: UsersService, useClass: MockUsersService }],
     }).compile();
 
     userService = module.get<UsersService>(UsersService);
@@ -92,13 +81,27 @@ describe('UsersController', () => {
     expect(controller).toBeDefined();
   });
 
+  describe('getFriendList', () => {
+    it('should call UsersService getFriendList and return the result', async () => {
+      const expectedResult: Friend[] = [
+        { id: 2, userName: '친구 1', imageUrl: 'gooogle.com' },
+        { id: 3, userName: '친구 2', imageUrl: 'gogle.com' },
+      ];
+
+      const result = await controller.getFriendList(req);
+
+      expect(userService.getFriendList).toHaveBeenCalledWith(req.user.id);
+      expect(result).toEqual(expectedResult);
+    });
+  });
+
   describe('findUserById', () => {
     it('should return a user profile', async () => {
       const friendId = 2;
 
       const result = await controller.findUserById(req, friendId);
 
-      expect(result).toEqual(mockUser);
+      expect(result).toEqual(mockUserProfile);
       expect(userService.findUserById).toHaveBeenCalledWith(
         friendId,
         req.user.id,
@@ -109,21 +112,16 @@ describe('UsersController', () => {
   describe('updateUserInfo', () => {
     it('should call UsersService updateUserInfo and return the result', async () => {
       const updateUserInfoDTO: UpdateUserInfoDTO = {
-        userName: 'hi',
-        phoneNumber: '011-2234-3113',
-        region: '',
-        role: 'ch',
-        imageUrl: null,
+        imageUrl: 'http://example.com/image.jpg',
+        phoneNumber: '123-456-7890',
+        region: null,
+        gender: 'F',
+        userName: 'John Doe',
       };
 
       const expectedResult: any = {
         ...updateUserInfoDTO,
-        id: req.user.id,
       };
-
-      jest
-        .spyOn(userService, 'updateUserInfo')
-        .mockResolvedValue(expectedResult);
 
       const result = await controller.updateUserInfo(req, updateUserInfoDTO);
 
@@ -140,10 +138,12 @@ describe('UsersController', () => {
       const userId = 1;
 
       const expectedResult = {
-        friendId: 2,
-        content: 'This is a test report.',
+        id: 1,
         userId: 1,
-        id: 2,
+        friendId: 1,
+        content: '먹튀',
+        user: null,
+        friend: null,
         created_at: null,
       };
 

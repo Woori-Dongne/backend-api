@@ -1,7 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Users } from './entities/user.entity';
-import { Repository } from 'typeorm';
 import { CreateUserDto, UpdateUserInfoDTO } from './dto/user.dto';
 import { plainToClass } from 'class-transformer';
 import { Friends } from './entities/friends.entity';
@@ -10,6 +9,8 @@ import { Reports } from './entities/report.entity';
 import { CreateReportDto } from './dto/report.dto';
 import { privateDecrypt } from 'crypto';
 import { FriendsDto } from './dto/friends.dto';
+import { In, Repository } from 'typeorm';
+import { Friend } from './type/friendList.type';
 
 @Injectable()
 export class UsersRepository {
@@ -49,7 +50,7 @@ export class UsersRepository {
     const user: Partial<Users> = {
       id: userId,
       userName: updateUserInfoDTO.userName,
-      role: updateUserInfoDTO.role,
+      gender: updateUserInfoDTO.gender,
       phoneNumber: updateUserInfoDTO.phoneNumber,
       imageUrl: updateUserInfoDTO?.imageUrl,
       regionId: region,
@@ -91,5 +92,31 @@ export class UsersRepository {
 
   async unfollowing(friendsDto: FriendsDto) {
     return await this.friendRepository.delete(friendsDto);
+  }
+
+  async getFriendsByUserId(userId: number): Promise<Friends[] | null> {
+    const user = await this.friendRepository.find({
+      where: { user: { id: userId } },
+    });
+
+    if (!user.length) {
+      throw new NotFoundException('Resource not found');
+    }
+
+    return user;
+  }
+
+  async getUserNamesByFriendIds(friendIds: number[]): Promise<Friend[]> {
+    const friends = await this.userRepository.find({
+      where: {
+        id: In(friendIds),
+      },
+    });
+
+    return friends.map((friend) => ({
+      id: friend.id,
+      userName: friend.userName,
+      imageUrl: friend.imageUrl,
+    }));
   }
 }

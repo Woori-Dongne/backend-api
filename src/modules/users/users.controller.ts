@@ -75,4 +75,11 @@ export class UsersController {
       friendId,
     });
   }
+
+  @UseGuards(AuthGuard)
+  @Get('follow')
+  async getFriendList(@Req() req: RequestUser) {
+    const userId = req.user.id;
+    return await this.userService.getFriendList(userId);
+  }
 }

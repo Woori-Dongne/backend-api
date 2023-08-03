@@ -57,7 +57,7 @@ describe('AuthService', () => {
         kakaoId: '1',
         userName: null,
         phoneNumber: null,
-        role: null,
+        gender: null,
         createdAt: null,
         updatedAt: null,
         user: null,

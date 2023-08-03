@@ -11,6 +11,7 @@ import { CreateReportDto } from './dto/report.dto';
 import { Reports } from './entities/report.entity';
 import { Profile } from './type/profile.type';
 import { FriendsDto } from './dto/friends.dto';
+import { Friend } from './type/friendList.type';
 
 @Injectable()
 export class UsersService {
@@ -57,5 +58,12 @@ export class UsersService {
 
   async unfollowing(friendsDto: FriendsDto) {
     return await this.usersRepository.unfollowing(friendsDto);
+  }
+
+  async getFriendList(userId: number): Promise<Friend[]> {
+    const followList = await this.usersRepository.getFriendsByUserId(userId);
+    const friendIdList = followList.map((friend) => friend.friendId);
+
+    return await this.usersRepository.getUserNamesByFriendIds(friendIdList);
   }
 }
