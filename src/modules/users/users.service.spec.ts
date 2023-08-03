@@ -1,7 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from './users.service';
-import { UsersRepository } from './user.repository';
 import { UpdateUserInfoDTO } from './dto/user.dto';
+import { RequestUser } from '../auth/type/req.interface';
+import { Friends } from './entities/friends.entity';
+import { UsersRepository } from './user.repository';
 import { Users } from './entities/user.entity';
 import { Profile } from './type/profile.type';
 import { CreateReportDto } from './dto/report.dto';
@@ -35,6 +37,30 @@ const mockUserProfile: Profile = {
   follow: false,
 };
 
+class UsersServiceMock {
+  async findUserById(friendId: number, userId: number) {
+    return mockUser;
+  }
+
+  async following(data: any) {
+    return {
+      id: 1,
+      user_id: data.userId,
+      friend_id: data.friendId,
+      created_at: undefined,
+      user: new Users(),
+      friend: new Users(),
+    };
+  }
+
+  async unfollowing(data: any) {
+    return {
+      raw: [],
+      affected: 1,
+    };
+  }
+}
+
 const mockCreateReportDto: CreateReportDto = {
   friendId: 2,
   content: 'This is a test report.',
@@ -59,6 +85,24 @@ class UsersRepositoryMock {
     return {
       ...updateUserInfoDTO,
       id: userId,
+    };
+  }
+
+  async following(data: any) {
+    return {
+      id: 1,
+      user_id: data.userId,
+      friend_id: data.friendId,
+      created_at: undefined,
+      user: new Users(),
+      friend: new Users(),
+    };
+  }
+
+  async unfollowing(data: any) {
+    return {
+      raw: [],
+      affected: 1,
     };
   }
 
@@ -95,6 +139,21 @@ describe('UsersService', () => {
     expect(usersService).toBeDefined();
   });
 
+  describe('findUserById', () => {
+    it('should return a user profile', async () => {
+      const friendId = 2;
+      const userId = 1;
+      jest
+        .spyOn(usersService, 'findUserById')
+        .mockResolvedValue(mockUserProfile);
+
+      const result = await usersService.findUserById(friendId, userId);
+
+      expect(result).toEqual(mockUserProfile);
+      expect(usersService.findUserById).toHaveBeenCalledWith(friendId, userId);
+    });
+  });
+
   describe('updateUserInfo', () => {
     it('should save userinfo', async () => {
       const userId = 1;
@@ -106,6 +165,10 @@ describe('UsersService', () => {
         imageUrl: 'http://example.com/image.jpg',
       };
 
+      const expectedResult: any = {
+        ...updateUserInfoDTO,
+        id: userId,
+      };
       jest.spyOn(usersRepository, 'checkRegion').mockResolvedValue(1);
 
       const result = await usersService.updateUserInfo(
@@ -153,6 +216,58 @@ describe('UsersService', () => {
         userId,
         mockCreateReportDto,
       );
+    });
+  });
+
+  describe('following', () => {
+    it('should call UsersService following and return the result', async () => {
+      const friendId = 2;
+      const userId = 1;
+      const expectedResult: Friends = {
+        id: 1,
+        userId: 1,
+        friendId: 2,
+        created_at: undefined,
+        user: new Users(),
+        friend: new Users(),
+      };
+
+      jest.spyOn(usersService, 'following').mockResolvedValue(expectedResult);
+
+      const result = await usersService.following({
+        userId,
+        friendId,
+      });
+
+      expect(usersService.following).toHaveBeenCalledWith({
+        userId,
+        friendId,
+      });
+      expect(result).toEqual(expectedResult);
+    });
+  });
+
+  describe('unfollowing', () => {
+    it('should call UsersService unfollowing and return the result', async () => {
+      const friendId = 2;
+      const userId = 1;
+      const friendDto: Friends = {
+        id: 1,
+        userId: 1,
+        friendId: 2,
+        created_at: undefined,
+        user: new Users(),
+        friend: new Users(),
+      };
+      const expectedResult = {
+        raw: [],
+        affected: 1,
+      };
+      jest.spyOn(usersService, 'unfollowing').mockResolvedValue(expectedResult);
+
+      const result = await usersService.unfollowing(friendDto);
+
+      expect(result).toEqual(expectedResult);
     });
   });
 });
