@@ -38,6 +38,14 @@ const mockUser: UpdateUserInfoDTO = {
   imageUrl: 'http://example.com/image.jpg',
 };
 
+const mockUserInfo: UpdateUserInfoDTO = {
+  userName: 'John Doe',
+  phoneNumber: '123-456-7890',
+  region: null,
+  gender: 'F',
+  imageUrl: 'http://example.com/image.jpg',
+};
+
 class MockUsersService {
   getFriendList = jest.fn().mockResolvedValue(mockFriendList);
   findUserById = jest.fn().mockResolvedValue(mockUserProfile);
@@ -53,6 +61,7 @@ class MockUsersService {
     raw: [],
     affected: 1,
   });
+  getUserInfo = jest.fn().mockResolvedValue(mockUserInfo);
 }
 
 describe('UsersController', () => {
@@ -196,6 +205,27 @@ describe('UsersController', () => {
         friendId,
       });
       expect(result).toEqual(expectedResult);
+    });
+  });
+  describe('getUserInfo', () => {
+    it('should return user info', async () => {
+      const userId = 1;
+      const expectedUserInfo: UpdateUserInfoDTO = {
+        userName: 'John Doe',
+        phoneNumber: '123-456-7890',
+        region: null,
+        gender: 'F',
+        imageUrl: 'http://example.com/image.jpg',
+      };
+
+      jest
+        .spyOn(userService, 'getUserInfo')
+        .mockResolvedValue(expectedUserInfo);
+
+      const result = await controller.getUserInfo(req);
+
+      expect(userService.getUserInfo).toHaveBeenCalledWith(userId);
+      expect(result).toEqual(expectedUserInfo);
     });
   });
 });

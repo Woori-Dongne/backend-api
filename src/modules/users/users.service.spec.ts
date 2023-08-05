@@ -355,4 +355,23 @@ describe('UsersService', () => {
       expect(usersService.unfollowing).toHaveBeenCalledWith(friendDto);
     });
   });
+  describe('getUserInfo', () => {
+    it('should return user info', async () => {
+      const userId = 1;
+      const expectedUserInfo: UpdateUserInfoDTO = {
+        userName: mockUser.userName,
+        phoneNumber: mockUser.phoneNumber,
+        region: undefined,
+        imageUrl: mockUser.imageUrl,
+        gender: mockUser.gender,
+      };
+
+      jest.spyOn(usersRepository, 'findUserById').mockResolvedValue(mockUser);
+
+      const result = await usersService.getUserInfo(userId);
+
+      expect(result).toEqual(expectedUserInfo);
+      expect(usersRepository.findUserById).toHaveBeenCalledWith(userId);
+    });
+  });
 });
