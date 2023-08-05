@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PostRepository } from './posts.repository';
 import { Posts } from './entities/posts.entity';
 import { Pagination } from '../enums';
+import { CreateChattingPostDto } from '../events/dto/events.dto';
 
 @Injectable()
 export class PostsService {
@@ -88,4 +89,7 @@ export class PostsService {
       }),
     );
   }
+
+  async checkRoom(roomName: string) {}
+  async createChattingPost(body: CreateChattingPostDto, userId: number) {}
 }

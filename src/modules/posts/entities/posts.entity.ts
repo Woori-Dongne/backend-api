@@ -60,6 +60,6 @@ export class Posts {
   @JoinColumn({ name: 'region_id' })
   region: Regions;
 
-  @OneToOne((type) => ChattingRoom, (ChattingRoom) => ChattingRoom.Posts)
-  ChattingRoom: ChattingRoom;
+  @OneToOne((type) => ChattingRoom, (chattingRoom) => chattingRoom.posts)
+  chattingRoom: ChattingRoom;
 }

@@ -19,7 +19,7 @@ export class ChattingUsers {
   @Column()
   userId: number;
 
-  @ManyToOne(() => ChattingRoom, (ChattingRoom) => ChattingRoom.ChattingUsers)
+  @ManyToOne(() => ChattingRoom, (chattingRoom) => chattingRoom.chattingUsers)
   @JoinColumn({ name: 'chatting_room_id' })
   chattingRoom: ChattingRoom;
 
