@@ -33,7 +33,47 @@ const mockPosts = [
     detailRegion: '역삼역',
   },
 ];
+const mockChattingRooms = [
+  {
+    chattingRoomId: 1,
+    deadline: new Date(),
+    isHost: true,
+    personnel: 3,
+    region: 'Detail Region 1',
+    title: 'Post 1',
+  },
+  {
+    chattingRoomId: 2,
+    deadline: new Date(),
+    isHost: false,
+    personnel: 5,
+    region: 'Detail Region 2',
+    title: 'Post 2',
+  },
+];
 
+const mockChattingRoomsWithPosts = [
+  {
+    chattingRoomId: 1,
+    post: {
+      userId: 1,
+      title: 'Post 1',
+      personnel: 3,
+      deadline: new Date(),
+      detailRegion: 'Detail Region 1',
+    },
+  },
+  {
+    chattingRoomId: 2,
+    post: {
+      userId: 2,
+      title: 'Post 2',
+      personnel: 5,
+      deadline: new Date(),
+      detailRegion: 'Detail Region 2',
+    },
+  },
+];
 class PostsServiceMock {
   async getUserPosts(userId: number, offset?: number, limit?: number) {
     return mockUserPosts;
@@ -47,6 +87,16 @@ class PostsServiceMock {
     limit?: number,
   ) {
     return mockPosts;
+  }
+
+  async getChattingRoomList(userId: number) {
+    return mockChattingRooms;
+  }
+
+  async getPostByChatRoom(chattingRoomId: number) {
+    return mockChattingRoomsWithPosts.find(
+      (room) => room.chattingRoomId === chattingRoomId,
+    ).post;
   }
 }
 
@@ -158,5 +208,36 @@ describe('PostsController', () => {
 
       expect(result).toEqual(expectedResult);
     });
+  });
+  it('should get chatting room list with correct user', async () => {
+    const userId = 1;
+    const expectedResult = [
+      {
+        chattingRoomId: mockChattingRoomsWithPosts[0].chattingRoomId,
+        isHost: true,
+        title: mockChattingRoomsWithPosts[0].post.title,
+        personnel: mockChattingRoomsWithPosts[0].post.personnel,
+        deadline: mockChattingRoomsWithPosts[0].post.deadline,
+        region: mockChattingRoomsWithPosts[0].post.detailRegion,
+      },
+      {
+        chattingRoomId: mockChattingRoomsWithPosts[1].chattingRoomId,
+        isHost: false,
+        title: mockChattingRoomsWithPosts[1].post.title,
+        personnel: mockChattingRoomsWithPosts[1].post.personnel,
+        deadline: mockChattingRoomsWithPosts[1].post.deadline,
+        region: mockChattingRoomsWithPosts[1].post.detailRegion,
+      },
+    ];
+
+    const req = {
+      user: {
+        id: userId,
+      },
+    } as RequestUser;
+
+    const result = await controller.getChattingRoomList(req);
+
+    expect(result).toEqual(expectedResult);
   });
 });

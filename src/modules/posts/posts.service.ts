@@ -49,4 +49,29 @@ export class PostsService {
 
     return posts;
   }
+
+  async getChattingRoomList(userId: number) {
+    const list = await this.postRepository.getChattingRoomList(userId);
+
+    if (list.length === 0) {
+      throw new NotFoundException('Resource not found');
+    }
+
+    return Promise.all(
+      list.map(async (room) => {
+        const post = await this.postRepository.getPostByChatRoom(
+          room.chattingRoomId,
+        );
+
+        return {
+          chattingRoomId: room.chattingRoomId,
+          isHost: post.userId === userId,
+          title: post.title,
+          personnel: post.personnel,
+          deadline: post.deadline,
+          region: post.detailRegion,
+        };
+      }),
+    );
+  }
 }

@@ -2,12 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, MoreThanOrEqual, Repository } from 'typeorm';
 import { Posts } from './entities/posts.entity';
+import { ChattingUsers } from './entities/chattingUsers.entity';
 
 @Injectable()
 export class PostRepository {
   constructor(
     @InjectRepository(Posts)
     private readonly postRepository: Repository<Posts>,
+    @InjectRepository(ChattingUsers)
+    private readonly chattingUsersRepository: Repository<ChattingUsers>,
   ) {}
 
   async getUserpost(
@@ -54,4 +57,23 @@ export class PostRepository {
 
     return await this.postRepository.find(options);
   }
+
+  getPostByChatRoom = async (chatRoomId: number) => {
+    const post = await this.postRepository
+      .createQueryBuilder('post')
+      .innerJoin('post.ChattingRoom', 'chattingRoom')
+      .where('chattingRoom.id = :chatRoomId', { chatRoomId })
+      .getOne();
+
+    return post;
+  };
+
+  getChattingRoomList = async (userId: number) => {
+    const chattingRoom = await this.chattingUsersRepository.find({
+      where: { userId },
+      relations: ['chattingRoom'],
+    });
+
+    return chattingRoom;
+  };
 }
