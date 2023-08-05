@@ -66,4 +66,16 @@ export class UsersService {
 
     return await this.usersRepository.getUserNamesByFriendIds(friendIdList);
   }
+
+  async getUserInfo(userId: number): Promise<UpdateUserInfoDTO> {
+    const user = await this.usersRepository.findUserById(userId);
+
+    return {
+      userName: user.userName,
+      phoneNumber: user.phoneNumber,
+      region: user?.region?.name,
+      imageUrl: user.imageUrl,
+      gender: user.gender,
+    };
+  }
 }

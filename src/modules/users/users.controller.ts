@@ -82,4 +82,11 @@ export class UsersController {
     const userId = req.user.id;
     return await this.userService.getFriendList(userId);
   }
+
+  @UseGuards(AuthGuard)
+  @Get()
+  async getUserInfo(@Req() req: RequestUser): Promise<UpdateUserInfoDTO> {
+    const userId = req.user.id;
+    return this.userService.getUserInfo(userId);
+  }
 }
