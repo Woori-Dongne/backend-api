@@ -89,7 +89,7 @@ describe('PostsService', () => {
           region: null,
           userId: null,
           detailRegion: '역삼역 2번출구',
-          ChattingRoom: null,
+          chattingRoom: null,
         },
       ];
 
@@ -150,7 +150,7 @@ describe('PostsService', () => {
           region: region,
           userId: 1,
           detailRegion: '역삼역 2번 출구',
-          ChattingRoom: null,
+          chattingRoom: null,
         },
       ];
 

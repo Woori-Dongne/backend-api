@@ -12,9 +12,11 @@ import { ChattingRoom } from './modules/posts/entities/chattingRoom.entity';
 import { ChattingUsers } from './modules/posts/entities/chattingUsers.entity';
 import { AuthModule } from './modules/auth/auth.module';
 import { SnakeCaseNamingStrategy } from './snake-case-naming-strategy';
+import { EventsModule } from './modules/events/events.module';
 
 @Module({
   imports: [
+    EventsModule,
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

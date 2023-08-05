@@ -9,7 +9,7 @@ import { Reports } from './entities/report.entity';
 import { CreateReportDto } from './dto/report.dto';
 import { privateDecrypt } from 'crypto';
 import { FriendsDto } from './dto/friends.dto';
-import { In, Repository } from 'typeorm';
+import { In, Repository, DataSource } from 'typeorm';
 import { Friend } from './type/friendList.type';
 
 @Injectable()
@@ -27,6 +27,10 @@ export class UsersRepository {
 
   async getUserByEmail(email: string): Promise<Users> {
     return await this.userRepository.findOne({ where: { email } });
+  }
+
+  async getUserById(id: number): Promise<Users> {
+    return await this.userRepository.findOne({ where: { id } });
   }
 
   async createUser(createUserDto: CreateUserDto): Promise<Users> {

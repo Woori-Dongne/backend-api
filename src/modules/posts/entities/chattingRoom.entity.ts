@@ -16,6 +16,9 @@ export class ChattingRoom {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({ type: 'varchar', length: 500, unique: true })
+  roomName: string;
+
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
@@ -25,16 +28,17 @@ export class ChattingRoom {
   @Column()
   hostId: number;
 
-  @OneToMany(() => ChattingUsers, (ChattingUsers) => ChattingUsers.chattingRoom)
-  ChattingUsers: ChattingUsers;
+  @Column()
+  postId: number;
+
+  @OneToMany(() => ChattingUsers, (chattingUsers) => chattingUsers.chattingRoom)
+  chattingUsers: ChattingUsers[];
 
   @ManyToOne(() => Users, (user) => user.chattingRoom)
   @JoinColumn({ name: 'host_id' })
   user: Users;
 
-  @OneToOne((type) => Posts, (Posts) => Posts.ChattingRoom, {
-    nullable: true,
-  })
-  @JoinColumn()
-  Posts: Posts;
+  @OneToOne((type) => Posts, (posts) => posts.chattingRoom)
+  @JoinColumn({ name: 'post_id' })
+  posts: Posts;
 }
