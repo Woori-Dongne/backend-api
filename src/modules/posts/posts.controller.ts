@@ -37,4 +37,11 @@ export class PostsController {
       sortBy,
     );
   }
+
+  @UseGuards(AuthGuard)
+  @Get('/chattings')
+  async getChattingRoomList(@Req() req: RequestUser) {
+    const userId = req.user.id;
+    return await this.postService.getChattingRoomList(userId);
+  }
 }

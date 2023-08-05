@@ -9,12 +9,13 @@ import { PostRepository } from './posts.repository';
 describe('PostsService', () => {
   let service: PostsService;
   let mockPostRepository: Partial<PostRepository>;
-  let postRepository: PostRepository;
 
   beforeEach(async () => {
     mockPostRepository = {
       getUserpost: jest.fn(),
       getPostList: jest.fn(),
+      getPostByChatRoom: jest.fn(),
+      getChattingRoomList: jest.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -88,6 +89,7 @@ describe('PostsService', () => {
           region: null,
           userId: null,
           detailRegion: '역삼역 2번출구',
+          ChattingRoom: null,
         },
       ];
 
@@ -148,6 +150,7 @@ describe('PostsService', () => {
           region: region,
           userId: 1,
           detailRegion: '역삼역 2번 출구',
+          ChattingRoom: null,
         },
       ];
 
@@ -178,6 +181,83 @@ describe('PostsService', () => {
 
       await expect(service.getPostList(regionId)).rejects.toThrowError(
         NotFoundException,
+      );
+    });
+  });
+
+  describe('getChattingRoomList', () => {
+    it('should return formatted chatting room list', async () => {
+      const userId = 1;
+      const room1: any = {
+        id: 1,
+        chattingRoomId: 1,
+        userId: 1,
+        chattingRoom: null,
+      };
+
+      const rooms = [room1];
+
+      const post1: any = {
+        id: 1,
+        title: '치킨 드실분',
+        content: '금일 오후 9시까지 구합니다.',
+        personnel: 4,
+        imageUrl:
+          'https://cdn.pixabay.com/photo/2019/01/04/04/56/boneless-3912455_1280.jpg',
+        deadline: '2023-08-03T15:51:09.000Z',
+        category: 1,
+        userId: 1,
+        detailRegion: '',
+        createdAt: '2023-08-03T15:51:09.000Z',
+        updatedAt: '2023-08-05T09:31:47.480Z',
+        deletedAt: '2023-08-03T15:51:09.000Z',
+        regionId: 1,
+      };
+
+      const post2: any = {
+        id: 1,
+        title: '치킨 드실분',
+        content: '금일 오후 9시까지 구합니다.',
+        personnel: 4,
+        imageUrl:
+          'https://cdn.pixabay.com/photo/2019/01/04/04/56/boneless-3912455_1280.jpg',
+        deadline: '2023-08-03T15:51:09.000Z',
+        category: 1,
+        userId: 1,
+        detailRegion: '',
+        createdAt: '2023-08-03T15:51:09.000Z',
+        updatedAt: '2023-08-05T09:31:47.480Z',
+        deletedAt: '2023-08-03T15:51:09.000Z',
+        regionId: 1,
+      };
+
+      jest
+        .spyOn(mockPostRepository, 'getChattingRoomList')
+        .mockResolvedValue(rooms);
+      jest
+        .spyOn(mockPostRepository, 'getPostByChatRoom')
+        .mockResolvedValueOnce(post1);
+
+      const expectedFormattedRooms = [
+        {
+          chattingRoomId: room1.chattingRoomId,
+          isHost: true,
+          title: post1.title,
+          personnel: post1.personnel,
+          deadline: post1.deadline,
+          region: post1.detailRegion,
+        },
+      ];
+
+      const result = await service.getChattingRoomList(userId);
+
+      expect(result).toEqual(expectedFormattedRooms);
+      expect(mockPostRepository.getChattingRoomList).toHaveBeenCalledWith(
+        userId,
+      );
+      expect(mockPostRepository.getPostByChatRoom).toHaveBeenCalledTimes(1);
+      expect(mockPostRepository.getPostByChatRoom).toHaveBeenCalledWith(
+        room1.chattingRoomId,
       );
     });
   });

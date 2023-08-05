@@ -5,9 +5,11 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { ChattingRoom } from './chattingRoom.entity';
 
 @Entity('posts')
 export class Posts {
@@ -57,4 +59,7 @@ export class Posts {
   @ManyToOne(() => Regions, (Regions) => Regions.post)
   @JoinColumn({ name: 'region_id' })
   region: Regions;
+
+  @OneToOne((type) => ChattingRoom, (ChattingRoom) => ChattingRoom.Posts)
+  ChattingRoom: ChattingRoom;
 }
