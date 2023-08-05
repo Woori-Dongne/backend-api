@@ -30,6 +30,7 @@ const mockPosts = [
     createdAt: null,
     updatedAt: null,
     deletedAt: null,
+    detailRegion: '역삼역',
   },
 ];
 
@@ -88,7 +89,7 @@ describe('PostsController', () => {
           name: null,
         },
       },
-    } as RequestUser; // RequestUser로 타입 캐스팅
+    } as RequestUser;
 
     const result = await controller.getPostList(req, category, sortBy);
 
@@ -113,6 +114,7 @@ describe('PostsController', () => {
           region: null,
           userId: null,
           regionId: null,
+          detailRegion: '역삼역 ',
         },
       ];
 

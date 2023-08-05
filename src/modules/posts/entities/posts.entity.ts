@@ -35,6 +35,9 @@ export class Posts {
   @Column()
   userId: number;
 
+  @Column({ type: 'varchar', length: 100 })
+  detailRegion: string;
+
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
