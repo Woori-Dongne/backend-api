@@ -30,6 +30,8 @@ export class AuthService {
       const createUserDto: CreateUserDto = {
         kakaoId: data.id,
         email: data.kakao_account?.email,
+        imageUrl: data.kakao_account?.profile.profile_image_url,
+        gender: data.kakao_account?.gender,
       };
       dbUser = await this.usersRepository.createUser(createUserDto);
     }

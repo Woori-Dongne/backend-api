@@ -8,6 +8,14 @@ export class CreateUserDto {
   @IsString()
   @Optional()
   readonly email: string;
+
+  @IsOptional()
+  @IsString()
+  readonly imageUrl: string;
+
+  @IsOptional()
+  @IsString()
+  readonly gender: string;
 }
 
 export class UpdateUserInfoDTO {
