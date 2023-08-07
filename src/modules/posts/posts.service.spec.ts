@@ -97,7 +97,7 @@ describe('PostsService', () => {
         .spyOn(mockPostRepository, 'getUserpost')
         .mockResolvedValue(userPosts);
 
-      const result = await service.getUserPosts(userId, offset, limit);
+      const result = await service.getUserPosts(userId, offset);
 
       expect(result).toEqual(userPosts);
       expect(mockPostRepository.getUserpost).toHaveBeenCalledWith(
@@ -159,7 +159,6 @@ describe('PostsService', () => {
       const result = await service.getPostList(
         regionId,
         offset,
-        limit,
         category,
         sortBy,
       );

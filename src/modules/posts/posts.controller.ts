@@ -9,13 +9,9 @@ export class PostsController {
 
   @UseGuards(AuthGuard)
   @Get('user')
-  async getUserPost(
-    @Req() req: RequestUser,
-    @Query('offset') offset?: number,
-    @Query('limit') limit?: number,
-  ) {
+  async getUserPost(@Req() req: RequestUser, @Query('offset') offset?: number) {
     const userId = req.user.id;
-    return await this.postService.getUserPosts(userId, offset, limit);
+    return await this.postService.getUserPosts(userId, offset);
   }
 
   @UseGuards(AuthGuard)
@@ -25,14 +21,12 @@ export class PostsController {
     @Query('category') category?: number,
     @Query('sortBy') sortBy?: string,
     @Query('offset') offset?: number,
-    @Query('limit') limit?: number,
   ) {
     const regionId = req.user.regionId;
 
     return await this.postService.getPostList(
       regionId,
       offset,
-      limit,
       category,
       sortBy,
     );

@@ -1,4 +1,4 @@
 export enum Pagination {
-  Limit = 10,
+  Limit = 3,
   Offset = 0,
 }
