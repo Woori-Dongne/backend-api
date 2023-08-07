@@ -179,7 +179,7 @@ describe('PostsController', () => {
         },
       } as RequestUser;
 
-      const result = await controller.getUserPost(req, offset, limit);
+      const result = await controller.getUserPost(req, offset);
 
       expect(result).toEqual(expectedResult);
     });

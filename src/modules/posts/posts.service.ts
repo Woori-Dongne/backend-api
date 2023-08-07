@@ -7,14 +7,10 @@ import { Pagination } from '../enums';
 export class PostsService {
   constructor(private readonly postRepository: PostRepository) {}
 
-  async getUserPosts(
-    userId: number,
-    offset?: number,
-    limit?: number,
-  ): Promise<Posts[]> {
-    const defaultOffset = offset || Pagination.Offset;
-    // const defaultOffset = offset ? (offset - 1) * Pagination.Limit : 0;
-    const defaultLimit = limit || Pagination.Limit;
+  async getUserPosts(userId: number, offset?: number): Promise<Posts[]> {
+    // const defaultOffset = offset || Pagination.Offset;
+    const defaultOffset = offset ? (offset - 1) * Pagination.Limit : 0;
+    const defaultLimit = Pagination.Limit;
     const post = await this.postRepository.getUserpost(
       userId,
       defaultOffset,
@@ -29,13 +25,11 @@ export class PostsService {
   async getPostList(
     regionId: number,
     offset?: number,
-    limit?: number,
     category?: number,
     sortBy?: string,
-  ): Promise<Posts[]> {
-    const defaultOffset = offset || Pagination.Offset;
-    // const defaultOffset = offset ? (offset - 1) * Pagination.Limit : 0;
-    const defaultLimit = limit || Pagination.Limit;
+  ) {
+    const defaultOffset = offset ? (offset - 1) * Pagination.Limit : 0;
+    const defaultLimit = Pagination.Limit;
 
     const posts = await this.postRepository.getPostList(
       regionId,
@@ -47,7 +41,27 @@ export class PostsService {
 
     if (!posts.length) throw new NotFoundException('Resource not found');
 
-    return posts;
+    const simplifiedPosts = posts.map((post) => ({
+      id: post.id,
+      title: post.title,
+      content: post.content,
+      personnel: post.personnel,
+      imageUrl: post.imageUrl,
+      deadline: post.deadline,
+      category: post.category,
+      userId: post.userId,
+      detailRegion: post.detailRegion,
+      createdAt: post.createdAt,
+      updatedAt: post.updatedAt,
+      deletedAt: post.deletedAt,
+      regionId: post.regionId,
+      user: {
+        id: post.user.id,
+        userName: post.user.userName,
+        imageUrl: post.user.imageUrl,
+      },
+    }));
+    return simplifiedPosts;
   }
 
   async getChattingRoomList(userId: number) {
