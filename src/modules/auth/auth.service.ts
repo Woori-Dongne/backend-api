@@ -14,11 +14,15 @@ export class AuthService {
   ) {}
 
   async kakaoLogin(kakaoToken: LoginRequest) {
+    let newbie = false;
+
     const user = await axios.get('https://kapi.kakao.com/v2/user/me', {
       headers: { Authorization: `Bearer ${kakaoToken.AccessToken}` },
     });
 
-    if (!user) throw new UnauthorizedException('NOT IN KAKAO');
+    if (!user) {
+      throw new UnauthorizedException('NOT IN KAKAO');
+    }
 
     const data = user.data;
 
@@ -27,6 +31,7 @@ export class AuthService {
     );
 
     if (!dbUser) {
+      newbie = true;
       const createUserDto: CreateUserDto = {
         kakaoId: data.id,
         email: data.kakao_account?.email,
@@ -41,7 +46,7 @@ export class AuthService {
       this.generateRefreshToken(dbUser.id),
     ]);
 
-    return { accessToken, refreshToken };
+    return { accessToken, refreshToken, newbie };
   }
 
   async generateAccessToken(id: number): Promise<string> {
