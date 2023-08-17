@@ -56,6 +56,7 @@ export class PostsService {
       updatedAt: post.updatedAt,
       deletedAt: post.deletedAt,
       regionId: post.regionId,
+      roomName: post.chattingRoom.roomName,
       user: {
         id: post.user.id,
         userName: post.user.userName,

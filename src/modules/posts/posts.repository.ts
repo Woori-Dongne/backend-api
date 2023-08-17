@@ -45,7 +45,7 @@ export class PostRepository {
       order: {},
       take: limit,
       skip: offset,
-      relations: ['user'],
+      relations: ['user', 'chattingRoom'],
     };
 
     if (category) {
