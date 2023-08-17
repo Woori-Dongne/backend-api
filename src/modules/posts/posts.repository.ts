@@ -101,7 +101,11 @@ export class PostRepository {
     return !!chattingRoom?.id;
   };
 
-  createChattingPost = async (body: CreateChattingPostDto, userId: number) => {
+  createChattingPost = async (
+    body: CreateChattingPostDto,
+    userId: number,
+    regionId: number,
+  ) => {
     const post = new Posts();
     const chattingRoom = new ChattingRoom();
     const chattingUser = new ChattingUsers();
@@ -112,7 +116,7 @@ export class PostRepository {
     post.imageUrl = body.imageUrl;
     post.deadline = body.deadline;
     post.category = body.category;
-    post.regionId = body.regionId;
+    post.regionId = regionId;
     post.detailRegion = body.detailRegion;
     post.userId = userId;
 

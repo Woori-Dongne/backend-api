@@ -10,7 +10,9 @@ import { Users } from '../users/entities/user.entity';
 import { UsersRepository } from '../users/user.repository';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Posts, ChattingRoom, ChattingUsers])],
-  providers: [EventsGateway, PostsService, PostRepository],
+  imports: [
+    TypeOrmModule.forFeature([Posts, ChattingRoom, ChattingUsers, Users]),
+  ],
+  providers: [EventsGateway, PostsService, PostRepository, UsersRepository],
 })
 export class EventsModule {}

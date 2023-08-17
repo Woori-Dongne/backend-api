@@ -18,6 +18,7 @@ import {
 import { Namespace, Socket } from 'socket.io';
 import * as jwt from 'jsonwebtoken';
 import { PostRepository } from '../posts/posts.repository';
+import { UsersRepository } from '../users/user.repository';
 import { CreateChattingPostDto, JoinChattingRoomDto } from './dto/events.dto';
 import { RequestUser } from '../auth/type';
 import { ConfigService } from '@nestjs/config';
@@ -36,6 +37,7 @@ export class EventsGateway
 {
   constructor(
     private readonly postRepository: PostRepository,
+    private readonly usersRepository: UsersRepository,
     private readonly configService: ConfigService,
   ) {}
 
@@ -102,9 +104,12 @@ export class EventsGateway
       this.configService.get('SECRET_KEY'),
     );
     const userId = payload['userId'];
+    const user = await this.usersRepository.getUserById(userId);
+    const regionId = user.regionId;
     const { post, chattingRoom } = await this.postRepository.createChattingPost(
       body,
       userId,
+      regionId,
     );
 
     socket.join(chattingRoom.roomName);
