@@ -164,4 +164,8 @@ export class PostRepository {
       user: { id: userId },
     });
   };
+
+  getPostById = async (postId: number): Promise<Posts> => {
+    return await this.postRepository.findOne({ where: { id: postId } });
+  };
 }

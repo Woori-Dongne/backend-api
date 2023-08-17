@@ -46,4 +46,10 @@ export class PostsController {
     const userId = req.user.id;
     return await this.postService.getChattingRoomList(userId);
   }
+
+  @UseGuards(AuthGuard)
+  @Get('/:postId')
+  async getPostById(@Req() req: RequestUser, @Param('postId') postId: number) {
+    return await this.postService.getPostById(postId);
+  }
 }

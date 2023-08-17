@@ -92,4 +92,8 @@ export class PostsService {
 
   async checkRoom(roomName: string) {}
   async createChattingPost(body: CreateChattingPostDto, userId: number) {}
+
+  async getPostById(postId: number) {
+    return await this.postRepository.getPostById(postId);
+  }
 }
