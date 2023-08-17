@@ -3,6 +3,7 @@ import { PostRepository } from './posts.repository';
 import { Posts } from './entities/posts.entity';
 import { Pagination } from '../enums';
 import { CreateChattingPostDto } from '../events/dto/events.dto';
+import { UpdatePostDto } from './type/post.interface';
 
 @Injectable()
 export class PostsService {
@@ -96,5 +97,9 @@ export class PostsService {
 
   async getPostById(postId: number) {
     return await this.postRepository.getPostById(postId);
+  }
+
+  async updatePost(postsDto: UpdatePostDto, userId: number, postId: number) {
+    return await this.postRepository.updatePost(postsDto, userId, postId);
   }
 }
