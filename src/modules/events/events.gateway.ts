@@ -87,7 +87,7 @@ export class EventsGateway
       .to(roomName)
       .emit('message', { username: chattingUser.user.userName, message });
 
-    return { username: chattingUser.user.userName, message };
+    return { userId, username: chattingUser.user.userName, message };
   }
 
   @SubscribeMessage('create-room')
