@@ -164,7 +164,10 @@ export class PostRepository {
   };
 
   getPostById = async (postId: number): Promise<Posts> => {
-    return await this.postRepository.findOne({ where: { id: postId } });
+    return await this.postRepository.findOne({
+      relations: ['chattingRoom'],
+      where: { id: postId },
+    });
   };
 
   updatePost = async (
@@ -184,5 +187,19 @@ export class PostRepository {
     post.detailRegion = postsDto.detailRegion;
 
     return await this.postRepository.save(post);
+  };
+
+  deletePost = async (userId: number, postId: number) => {
+    return await this.postRepository.delete({ id: postId, userId });
+  };
+
+  deleteChatting = async (chattingRoomId: number) => {
+    await this.chattingUsersRepository.delete({
+      chattingRoomId,
+    });
+
+    await this.chattingRoomRepository.delete({ id: chattingRoomId });
+
+    return;
   };
 }

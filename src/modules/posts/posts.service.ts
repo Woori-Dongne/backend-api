@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { PostRepository } from './posts.repository';
 import { Posts } from './entities/posts.entity';
 import { Pagination } from '../enums';
@@ -101,5 +105,21 @@ export class PostsService {
 
   async updatePost(postsDto: UpdatePostDto, userId: number, postId: number) {
     return await this.postRepository.updatePost(postsDto, userId, postId);
+  }
+
+  async deletePost(userId: number, postId: number) {
+    const post = await this.postRepository.getPostById(postId);
+
+    if (!post) {
+      throw new NotFoundException('NOT FOUND RESOURCE');
+    }
+
+    if (userId != post.userId) {
+      throw new UnauthorizedException('NOT Writer');
+    }
+
+    await this.postRepository.deleteChatting(post.chattingRoom.id);
+
+    return await this.postRepository.deletePost(userId, postId);
   }
 }
