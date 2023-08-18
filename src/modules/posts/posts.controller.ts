@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Param,
+  Patch,
   Query,
   Req,
   UseGuards,
@@ -10,6 +11,7 @@ import {
 import { PostsService } from './posts.service';
 import { AuthGuard } from '../auth/security/auth.guard';
 import { RequestUser } from '../auth/type/req.interface';
+import { UpdatePostDto } from './type/post.interface';
 
 @Controller('posts')
 export class PostsController {
@@ -51,5 +53,17 @@ export class PostsController {
   @Get('/:postId')
   async getPostById(@Req() req: RequestUser, @Param('postId') postId: number) {
     return await this.postService.getPostById(postId);
+  }
+
+  @UseGuards(AuthGuard)
+  @Patch('/:postId')
+  async updatePost(
+    @Req() req: RequestUser,
+    @Body() postsDto: UpdatePostDto,
+    @Param('postId') postId: number,
+  ) {
+    const userId = req.user.id;
+
+    return await this.postService.updatePost(postsDto, userId, postId);
   }
 }

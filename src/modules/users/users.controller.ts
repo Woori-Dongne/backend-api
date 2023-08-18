@@ -20,6 +20,13 @@ export class UsersController {
   constructor(private userService: UsersService) {}
 
   @UseGuards(AuthGuard)
+  @Get('/follow')
+  async getFriendList(@Req() req: RequestUser) {
+    const userId = req.user.id;
+    return await this.userService.getFriendList(userId);
+  }
+
+  @UseGuards(AuthGuard)
   @Patch()
   async updateUserInfo(
     @Req() req: RequestUser,
@@ -39,6 +46,7 @@ export class UsersController {
     return await this.userService.findUserById(friendId, userId);
   }
 
+  @UseGuards(AuthGuard)
   @Post('report')
   async createReport(
     @Req() req: RequestUser,
@@ -74,13 +82,6 @@ export class UsersController {
       userId,
       friendId,
     });
-  }
-
-  @UseGuards(AuthGuard)
-  @Get('follow')
-  async getFriendList(@Req() req: RequestUser) {
-    const userId = req.user.id;
-    return await this.userService.getFriendList(userId);
   }
 
   @UseGuards(AuthGuard)

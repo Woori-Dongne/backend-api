@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { UsersRepository } from './user.repository';
 import { UpdateUserInfoDTO } from './dto/user.dto';
 import { Users } from './entities/user.entity';
@@ -62,6 +62,10 @@ export class UsersService {
 
   async getFriendList(userId: number): Promise<Friend[]> {
     const followList = await this.usersRepository.getFriendsByUserId(userId);
+
+    if (followList.length === 0) {
+      throw new NotFoundException('Resource not found');
+    }
     const friendIdList = followList.map((friend) => friend.friendId);
 
     return await this.usersRepository.getUserNamesByFriendIds(friendIdList);

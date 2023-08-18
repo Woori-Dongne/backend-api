@@ -7,6 +7,7 @@ import { ChattingUsers } from './entities/chattingUsers.entity';
 import { ChattingRoom } from './entities/chattingRoom.entity';
 import { CreateChattingPostDto } from '../events/dto/events.dto';
 import { Users } from '../users/entities/user.entity';
+import { UpdatePostDto } from './type/post.interface';
 
 @Injectable()
 export class PostRepository {
@@ -52,14 +53,11 @@ export class PostRepository {
       options.where['category'] = category;
     }
 
-    switch (sortBy) {
-      case 'deadLine':
-        options.order = { deadline: 'ASC' };
-        options.where = { deadline: MoreThanOrEqual(today) };
-        break;
-      default:
-        options.order = { createdAt: 'DESC' };
-        break;
+    if (sortBy === 'deadLine') {
+      options.order = { deadline: 'ASC' };
+      options.where['deadline'] = MoreThanOrEqual(today);
+    } else {
+      options.order = { createdAt: 'DESC' };
     }
 
     return await this.postRepository.find(options);
@@ -167,5 +165,24 @@ export class PostRepository {
 
   getPostById = async (postId: number): Promise<Posts> => {
     return await this.postRepository.findOne({ where: { id: postId } });
+  };
+
+  updatePost = async (
+    postsDto: UpdatePostDto,
+    userId: number,
+    postId: number,
+  ) => {
+    const post = await this.postRepository.findOne({
+      where: { id: postId, userId },
+    });
+
+    post.title = postsDto.title;
+    post.content = postsDto.content;
+    post.category = postsDto.category;
+    post.personnel = postsDto.personnel;
+    post.imageUrl = postsDto.imageUrl;
+    post.detailRegion = postsDto.detailRegion;
+
+    return await this.postRepository.save(post);
   };
 }
