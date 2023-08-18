@@ -66,7 +66,7 @@ export class PostRepository {
   getPostByChatRoom = async (chatRoomId: number): Promise<Posts> => {
     const post = await this.postRepository
       .createQueryBuilder('post')
-      .innerJoin('post.ChattingRoom', 'chattingRoom')
+      .innerJoin('post.chattingRoom', 'chattingRoom')
       .where('chattingRoom.id = :chatRoomId', { chatRoomId })
       .getOne();
 
