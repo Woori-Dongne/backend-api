@@ -85,7 +85,11 @@ export class EventsGateway
 
     socket.broadcast
       .to(roomName)
-      .emit('message', { username: chattingUser.user.userName, message });
+      .emit('message', {
+        userId,
+        username: chattingUser.user.userName,
+        message,
+      });
 
     return { userId, username: chattingUser.user.userName, message };
   }
