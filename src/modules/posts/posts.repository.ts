@@ -27,6 +27,7 @@ export class PostRepository {
   ): Promise<Posts[] | null> {
     return await this.postRepository.find({
       where: { user: { id: userId } },
+      relations: ['chattingRoom'],
       take: limit,
       skip: offset,
     });

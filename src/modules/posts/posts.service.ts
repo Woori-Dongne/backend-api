@@ -86,6 +86,7 @@ export class PostsService {
 
         return {
           chattingRoomId: room.chattingRoomId,
+          roomName: room.chattingRoom.roomName,
           isHost: post.userId === userId,
           title: post.title,
           personnel: post.personnel,
