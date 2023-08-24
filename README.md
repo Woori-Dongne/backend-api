@@ -57,6 +57,13 @@ $ npm start
 
 ---
 
+## ERD 🗃️
+
+<img width="941" alt="image" src="https://github.com/Woori-Dongne/backend-api/assets/119482288/86d45bc3-0ac7-4d5a-b1a9-d42de4aeb865">
+
+
+---
+
 ## 주요 기능 📦
 
 ### 🏘️ 소셜 로그인 (카카오톡)
