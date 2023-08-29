@@ -30,6 +30,26 @@ $ npm install
 $ npm start
 ```
 
+### 디렉토리 구조
+```bash
+├── test
+├── src
+│   ├── app.module.ts
+│   ├── main.ts
+│   ├── snake-case-naming-strategy.ts
+│   └── modules   ├── auth
+│                 ├── enums
+│                 ├── events
+│                 ├── posts
+│                 └── users
+├── tsconfig.json
+├── .env
+├── .eslintrc
+├── .prettierrc
+├── README.md
+├── package-lock.json
+└── package.json
+```
 ---
 
 ## Stacks 🐈
@@ -88,23 +108,4 @@ $ npm start
 
 
 
-### 디렉토리 구조
-```bash
-├── test
-├── src
-│   ├── app.module.ts
-│   ├── main.ts
-│   ├── snake-case-naming-strategy.ts
-│   └── modules   ├── auth
-│                 ├── enums
-│                 ├── events
-│                 ├── posts
-│                 └── users
-├── tsconfig.json
-├── .env
-├── .eslintrc
-├── .prettierrc
-├── README.md
-├── package-lock.json
-└── package.json
-```
+
