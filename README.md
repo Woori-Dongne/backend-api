@@ -79,8 +79,7 @@ $ npm start
 
 ## ERD 🗃️
 
-<img width="941" alt="image" src="https://github.com/Woori-Dongne/backend-api/assets/119482288/86d45bc3-0ac7-4d5a-b1a9-d42de4aeb865">
-
+![ERD](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fb8Jl4q%2FbtsrZD5bPaN%2FUSHKdKuaIshYdggW7gKWOK%2Fimg.png)
 
 ---
 
