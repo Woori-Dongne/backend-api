@@ -1,13 +1,13 @@
 import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Query,
-  Req,
-  UseGuards,
+    Body,
+    Controller,
+    Delete,
+    Get,
+    Param,
+    Patch, Post,
+    Query,
+    Req,
+    UseGuards,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { AuthGuard } from '../auth/security/auth.guard';
@@ -74,5 +74,11 @@ export class PostsController {
     const userId = req.user.id;
 
     return await this.postService.deletePost(userId, postId);
+  }
+
+  @Post('on-notify')
+  async checkOnNotify(@Req() req) {
+      console.log(req.headers);
+      return { reponse: "OK"}
   }
 }
