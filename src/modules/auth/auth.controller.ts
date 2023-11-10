@@ -12,6 +12,7 @@ export class AuthController {
   @Post('on-notify')
   async checkOnNotify(@Req() req) {
     console.log(req.headers);
+    console.log(req.body);
     return { reponse: 'OK'}
   }
   @Post('kakao')
