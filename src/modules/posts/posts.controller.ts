@@ -75,10 +75,4 @@ export class PostsController {
 
     return await this.postService.deletePost(userId, postId);
   }
-
-  @Post('on-notify')
-  async checkOnNotify(@Req() req) {
-      console.log(req.headers);
-      return { reponse: "OK"}
-  }
 }

@@ -9,6 +9,11 @@ import { RequestUser } from './type/req.interface';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
+  @Post('on-notify')
+  async checkOnNotify(@Req() req) {
+    console.log(req.headers);
+    return { reponse: 'OK'}
+  }
   @Post('kakao')
   async kakaoLogin(@Body() kakaoToken: LoginRequest): Promise<Tokens> {
     return await this.authService.kakaoLogin(kakaoToken);
